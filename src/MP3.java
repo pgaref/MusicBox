@@ -6,7 +6,7 @@
 
 /**
  *
- * @author pgaref
+ * @author pgaref@ics.forth.gr
  */
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
