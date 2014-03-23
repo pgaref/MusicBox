@@ -5,6 +5,9 @@
  */
 package GUI;
 
+import Audio.InteractiveTableModel;
+import static GUI.OpenJD.instance;
+import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -175,11 +178,11 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel2.setText("        2 Tracks");
+        jLabel2.setText("        0 Tracks");
 
         jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel3.setText("     0:07:05 Total Playtime");
+        jLabel3.setText("     0:00:00 Total Playtime");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -212,36 +215,8 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
         );
 
         jTable1.setAutoCreateRowSorter(true);
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"", "Bandari - Heaven Blue", "01", "Indian Dreams", "3:28", "16/12/2013"},
-                {"►", "Bandari - Heaven Blue", "02", "Magic Winds", "3:36", "18/12/2013"},
-                {"", "", "", null, null, null},
-                {null, null, "", null, null, null},
-                {null, null, "", null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Now Playing", "Artist / Album", "Track No", "Title", "Duration", "Publish Date"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        tableModel = new InteractiveTableModel(columnNames);
+        jTable1.setModel(tableModel);
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTable1.setFocusable(false);
         jTable1.setGridColor(new java.awt.Color(204, 204, 204));
@@ -256,22 +231,15 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getColumn(0).setMinWidth(100);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(1).setMinWidth(160);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(160);
-        jTable1.getColumnModel().getColumn(2).setMinWidth(70);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(3).setMinWidth(130);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(130);
-        jTable1.getColumnModel().getColumn(4).setMinWidth(100);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(5).setMinWidth(120);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(120);
 
         jMenu1.setText("Collection");
 
         jMenuItem4.setText("Open");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
 
         jMenuItem1.setText("New Collection");
@@ -373,6 +341,30 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
         }   // TODO add your handling code here:
     }//GEN-LAST:event_jTable1MouseReleased
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+         OpenJD dialog = new OpenJD(instance, true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            
+                /* checking file */
+            if(dialog.file != null){
+                    if(dialog.file.exists()){
+                           File tmp = dialog.file;
+                           System.out.println("Got file : " + tmp.getName());
+                           tableModel.addCompleteRow(tmp.getName(), "test1", "test2");
+                           jLabel2.setText( "       " + tableModel.getRowCount()+"Tracks");
+                    }
+                    else{
+                        System.out.println("File does not exist");
+                    }
+            }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
     private static MusicPlayerGUI instance;
 
     /**
@@ -449,5 +441,9 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTable jTable1;
+    public static final String[] columnNames = {
+        "Title", "Artist", "Album", "Rank"
+    };
+    private InteractiveTableModel tableModel;
     // End of variables declaration//GEN-END:variables
 }

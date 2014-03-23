@@ -94,7 +94,7 @@ public class OpenJD extends javax.swing.JDialog {
 
     private void Open(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Open
         fc = new JFileChooser("Open");
-        FileNameExtensionFilter txt = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+        FileNameExtensionFilter txt = new FileNameExtensionFilter("Audio Files", "mp3", "MPEG", "MP3", "mpeg");
         fc.setFileFilter(txt);
         fc.setDialogTitle("Open file");
 
