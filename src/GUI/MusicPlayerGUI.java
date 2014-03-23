@@ -232,7 +232,7 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jMenu1.setText("Collection");
+        jMenu1.setText("Player");
 
         jMenuItem4.setText("Open");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -242,7 +242,12 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem4);
 
-        jMenuItem1.setText("New Collection");
+        jMenuItem1.setText("New PlayList");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
         jMenu1.add(jSeparator3);
 
@@ -357,13 +362,18 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
                            File tmp = dialog.file;
                            System.out.println("Got file : " + tmp.getName());
                            tableModel.addCompleteRow(tmp.getName(), "test1", "test2");
-                           jLabel2.setText( "       " + tableModel.getRowCount()+"Tracks");
+                           jLabel2.setText( "       " + tableModel.getRowCount()+" Tracks");
+                           tableModel.PrintDataVector();
                     }
                     else{
                         System.out.println("File does not exist");
                     }
             }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private static MusicPlayerGUI instance;
 

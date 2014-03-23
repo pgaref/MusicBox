@@ -64,4 +64,10 @@ public class AudioRecord {
     public void setRank(int rank) {
         this.rank = rank;
     }
+    
+    
+    public String toString(){
+        return "["+this.title+", "+ this.artist+", "+ this.album+", "+this.rank + "]";
+        
+    }
 }

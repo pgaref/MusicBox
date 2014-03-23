@@ -116,4 +116,13 @@ package Audio;
             dataVector.size() - 1,
             dataVector.size() - 1);
      }
+     
+     
+     public void PrintDataVector(){
+       
+         for(int i = 0 ; i < dataVector.size(); i++ ){
+             System.out.println("["+i+"] "+((AudioRecord)dataVector.get(i)).toString());
+         }
+         
+     }
  }
