@@ -1,3 +1,5 @@
+package Player;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,12 +16,12 @@ import java.io.FileInputStream;
 import javazoom.jl.player.Player;
 
 
-public class MP3 {
+public class SimplePlayer {
     private String filename;
     private Player player;
 
     // constructor that takes the name of an MP3 file
-    public MP3(String filename) {
+    public SimplePlayer(String filename) {
         this.filename = filename;
     }
 
@@ -30,6 +32,8 @@ public class MP3 {
             BufferedInputStream bis = new BufferedInputStream(fis);
             player = new Player(bis);
             player.play();
+            
+            
         }
         catch (Exception e) {
             System.out.println("Problem playing file " + filename);
@@ -43,7 +47,7 @@ public class MP3 {
     public static void main(String[] args) {
         
         //plays 07.mp3 file located at C drive
-        MP3 mp3 = new MP3("ImperialMarch.mp3");
+        SimplePlayer mp3 = new SimplePlayer("ImperialMarch.mp3");
         mp3.play();
    
     }
