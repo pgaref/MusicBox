@@ -28,7 +28,7 @@ public final class VolumeControl
 
         for (Mixer.Info mixerInfo : mixers)
         {
-            System.out.println("MIXER: " + mixerInfo.getName());
+           // System.out.println("MIXER: " + mixerInfo.getName());
             //if(!mixerInfo.getName().equals("Java Sound Audio Engine")) continue;
 
             Mixer mixer         = AudioSystem.getMixer(mixerInfo);
@@ -42,7 +42,7 @@ public final class VolumeControl
                     Line line = mixer.getLine(info);
                     line.open();
                     if(line.isControlSupported(FloatControl.Type.VOLUME)){
-                        System.out.println("Mixinfo: "+ line.getLineInfo());
+                       // System.out.println("Mixinfo: "+ line.getLineInfo());
                         speakers.add(line);
                     }
 

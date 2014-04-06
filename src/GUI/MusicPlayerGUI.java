@@ -141,7 +141,6 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
             }
         });
 
-        jSlider1.setValue(100);
         jSlider1.setFocusable(false);
         jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -479,9 +478,14 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        
+        this.status.setText("Stopped");
+        if(this.player != null)
+            this.player.stop();
+        this.currentPlaying = 0;
         this.tableModel =new InteractiveTableModel(columnNames);
         jTable1.setModel(tableModel);
-        //this.tableModel.
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -557,7 +561,7 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_seekFActionPerformed
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
-        System.out.println("Slider: "+ this.jSlider1.getValue());
+       // System.out.println("Slider: "+ this.jSlider1.getValue());
         VolumeControl.setVolume(this.jSlider1.getValue());
         
     }//GEN-LAST:event_jSlider1StateChanged
@@ -697,6 +701,7 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                VolumeControl.setVolume((float)50);
                 GUI.MusicPlayerGUI.instance = new MusicPlayerGUI();
                 instance.setVisible(true);
                 instance.setLocationRelativeTo(null);
