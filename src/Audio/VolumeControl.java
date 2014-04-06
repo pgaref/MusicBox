@@ -29,10 +29,10 @@ public final class VolumeControl
         for (Mixer.Info mixerInfo : mixers)
         {
             System.out.println("MIXER: " + mixerInfo.getName());
-            if(!mixerInfo.getName().equals("Java Sound Audio Engine")) continue;
+            //if(!mixerInfo.getName().equals("Java Sound Audio Engine")) continue;
 
             Mixer mixer         = AudioSystem.getMixer(mixerInfo);
-            Line.Info[] lines   = mixer.getSourceLineInfo();
+            Line.Info[] lines   = mixer.getTargetLineInfo();
 
             for (Line.Info info : lines)
             {
@@ -40,7 +40,11 @@ public final class VolumeControl
                 try 
                 {
                     Line line = mixer.getLine(info);
-                    speakers.add(line);
+                    line.open();
+                    if(line.isControlSupported(FloatControl.Type.VOLUME)){
+                        System.out.println("Mixinfo: "+ line.getLineInfo());
+                        speakers.add(line);
+                    }
 
                 }
                 catch (LineUnavailableException e)      { e.printStackTrace();                                                                                  } 
@@ -56,14 +60,15 @@ public final class VolumeControl
 
     public static void setVolume(float level)
     {
+        findSpeakers();
         System.out.println("setting volume to "+level);
         for(Line line : speakers)
         {
             try
             {
                 line.open();
-                FloatControl control = (FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN);
-                control.setValue(limit(control,level));
+                FloatControl control = (FloatControl)line.getControl(FloatControl.Type.VOLUME);
+                control.setValue((float)(level/100));
             }
             catch (LineUnavailableException e) { continue; }
             catch(java.lang.IllegalArgumentException e) { continue; }

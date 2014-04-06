@@ -558,7 +558,6 @@ public class MusicPlayerGUI extends javax.swing.JFrame {
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         System.out.println("Slider: "+ this.jSlider1.getValue());
-        VolumeControl.findSpeakers();
         VolumeControl.setVolume(this.jSlider1.getValue());
         
     }//GEN-LAST:event_jSlider1StateChanged

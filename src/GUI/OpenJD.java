@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author ThZ PC
+ * @author PG
  */
 public class OpenJD extends javax.swing.JDialog {
 
