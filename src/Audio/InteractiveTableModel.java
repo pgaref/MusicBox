@@ -9,6 +9,7 @@ package Audio;
  * @author PG
  */
  import java.util.Collection;
+import java.util.Collections;
  import java.util.Vector;
  import javax.swing.table.AbstractTableModel;
 
@@ -19,11 +20,11 @@ package Audio;
      public static final int HIDDEN_INDEX = 3;
 
      protected String[] columnNames;
-     protected Vector dataVector;
+     private Vector<AudioRecord> dataVector;
 
      public InteractiveTableModel(String[] columnNames) {
          this.columnNames = columnNames;
-         dataVector = new Vector();
+         dataVector = new Vector<AudioRecord>();
      }
 
      public String getColumnName(int column) {
@@ -47,7 +48,7 @@ package Audio;
      }
 
      public Object getValueAt(int row, int column) {
-         AudioRecord record = (AudioRecord)dataVector.get(row);
+         AudioRecord record = (AudioRecord)getDataVector().get(row);
          switch (column) {
              case TITLE_INDEX:
                 return record.getTitle();
@@ -63,7 +64,7 @@ package Audio;
      }
 
      public void setValueAt(Object value, int row, int column) {
-         AudioRecord record = (AudioRecord)dataVector.get(row);
+         AudioRecord record = (AudioRecord)getDataVector().get(row);
          switch (column) {
              case TITLE_INDEX:
                 record.setTitle((String)value);
@@ -81,10 +82,11 @@ package Audio;
                 System.out.println("invalid index");
          }
          fireTableCellUpdated(row, column);
+         this.SortVector(true);
      }
 
      public int getRowCount() {
-         return dataVector.size();
+         return getDataVector().size();
      }
 
      public int getColumnCount() {
@@ -92,8 +94,8 @@ package Audio;
      }
 
      public boolean hasEmptyRow() {
-         if (dataVector.size() == 0) return false;
-         AudioRecord audioRecord = (AudioRecord)dataVector.get(dataVector.size() - 1);
+         if (getDataVector().size() == 0) return false;
+         AudioRecord audioRecord = (AudioRecord)getDataVector().get(getDataVector().size() - 1);
          if (audioRecord.getTitle().trim().equals("") &&
             audioRecord.getArtist().trim().equals("") &&
             audioRecord.getAlbum().trim().equals(""))
@@ -104,25 +106,52 @@ package Audio;
      }
 
      public void addEmptyRow() {
-         dataVector.add(new AudioRecord());
+         getDataVector().add(new AudioRecord());
          fireTableRowsInserted(
-            dataVector.size() - 1,
-            dataVector.size() - 1);
+            getDataVector().size() - 1,
+            getDataVector().size() - 1);
      }
      
-     public void addCompleteRow(String title, String artist, String album) {
-         dataVector.add(new AudioRecord(title, artist , album,dataVector.size() +1));
+     public void addSong(String title, String artist, String album, String path) {
+         getDataVector().add(new AudioRecord(title, artist , album,getDataVector().size() +1 , path));
+         Collections.sort(getDataVector());
          fireTableRowsInserted(
-            dataVector.size() - 1,
-            dataVector.size() - 1);
+            getDataVector().size() - 1,
+            getDataVector().size() - 1);
      }
      
      
      public void PrintDataVector(){
        
-         for(int i = 0 ; i < dataVector.size(); i++ ){
-             System.out.println("["+i+"] "+((AudioRecord)dataVector.get(i)).toString());
+         for(int i = 0 ; i < getDataVector().size(); i++ ){
+             System.out.println("["+i+"] "+((AudioRecord)getDataVector().get(i)).toString());
          }
          
      }
+     
+     public void SortVector(boolean ascending){
+         if(ascending)
+            Collections.sort(dataVector);
+         else
+            Collections.reverse(dataVector);
+         fireTableDataChanged();
+     }
+     
+     public void ShuffleVector(){
+         Collections.shuffle(getDataVector());
+         fireTableDataChanged();
+     }
+     
+     public boolean isEmpty(){
+         return (this.getDataVector().size() == 0);
+         
+         
+     }
+
+    /**
+     * @return the dataVector
+     */
+    public Vector<AudioRecord> getDataVector() {
+        return dataVector;
+    }
  }

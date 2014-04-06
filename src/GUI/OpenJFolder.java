@@ -14,7 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author ThZ PC
  */
-public class OpenJD extends javax.swing.JDialog {
+public class OpenJFolder extends javax.swing.JDialog {
 
     /**
      * Creates new form OpenJD
@@ -23,9 +23,10 @@ public class OpenJD extends javax.swing.JDialog {
     static private final String newline = "\n";
     JFileChooser fc;
     public static File file = null;
+    File[] filelist = null;
     public static String n_comp;
 
-    public OpenJD(MusicPlayerGUI parent, boolean modal) {
+    public OpenJFolder(MusicPlayerGUI parent, boolean modal) {
         this.instance = parent;
         this.setModal(modal);
         initComponents();
@@ -44,7 +45,7 @@ public class OpenJD extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Open");
-        setPreferredSize(new java.awt.Dimension(350, 200));
+        setPreferredSize(new java.awt.Dimension(449, 350));
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -52,7 +53,7 @@ public class OpenJD extends javax.swing.JDialog {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jButton1.setText("Open a file...");
+        jButton1.setText("Open a Folder...");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Open(evt);
@@ -94,17 +95,26 @@ public class OpenJD extends javax.swing.JDialog {
 
     private void Open(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Open
         fc = new JFileChooser("Open");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         FileNameExtensionFilter txt = new FileNameExtensionFilter("Audio Files", "mp3", "MPEG", "MP3", "mpeg");
         fc.setFileFilter(txt);
-        fc.setDialogTitle("Open file");
+        fc.setDialogTitle("Open Folder");
 
-        int returnVal = fc.showOpenDialog(OpenJD.this);
+        int returnVal = fc.showOpenDialog(OpenJFolder.this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = fc.getSelectedFile();
-            jTextArea1.append("Opening: " + file.getName() + " opened successfully." + newline);
+            if(file.isDirectory()){
+                filelist = file.listFiles();
+                for(File tmp : filelist)
+                    jTextArea1.append("Opening: " + tmp.getName() + " opened successfully." + newline);
+                
+                
+            }
+            else
+                jTextArea1.append("Not a valid Folder!" + newline);
         } else {
-            jTextArea1.append("Open command cancelled by user." + newline);
+            jTextArea1.append("Not a valid Folder!" + newline);
         }
         jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
 
@@ -131,13 +141,13 @@ public class OpenJD extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(OpenJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenJFolder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(OpenJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenJFolder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(OpenJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenJFolder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(OpenJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenJFolder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -145,7 +155,7 @@ public class OpenJD extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 //pgaref touched
-                OpenJD dialog = new OpenJD(instance, true);
+                OpenJFolder dialog = new OpenJFolder(instance, true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

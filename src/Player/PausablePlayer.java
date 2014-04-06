@@ -4,8 +4,15 @@
  */
 package Player;
 
+import Audio.AudioRecord;
+import GUI.MusicPlayerGUI;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.AudioDevice;
 import javazoom.jl.player.Player;
@@ -23,6 +30,9 @@ public class PausablePlayer {
 
     // the player actually doing all the work
     private final Player player;
+    private InputStream stream;
+    private Vector<AudioRecord> playlist;
+    private boolean playinglist = false;
 
     // locking object used to communicate with player thread
     private final Object playerLock = new Object();
@@ -31,19 +41,29 @@ public class PausablePlayer {
     private int playerStatus = NOTSTARTED;
 
     public PausablePlayer(final InputStream inputStream) throws JavaLayerException {
+        this.stream =inputStream;
         this.player = new Player(inputStream);
     }
 
     public PausablePlayer(final InputStream inputStream, final AudioDevice audioDevice) throws JavaLayerException {
+        this.stream =inputStream;
         this.player = new Player(inputStream, audioDevice);
     }
-
+    
+    public PausablePlayer playPlayList(Vector<AudioRecord> musicList) throws FileNotFoundException, JavaLayerException{
+        this.playlist = musicList;
+        this.playinglist = true;
+        FileInputStream input = new FileInputStream(this.playlist.get(0).getPath()); 
+        PausablePlayer  p = new PausablePlayer(input);
+        return p;
+        
+    }
     /**
      * Starts playback (resumes if paused)
      */
     public void play() throws JavaLayerException {
         synchronized (playerLock) {
-            switch (playerStatus) {
+            switch (getPlayerStatus()) {
                 case NOTSTARTED:
                     final Runnable r = new Runnable() {
                         public void run() {
@@ -70,10 +90,10 @@ public class PausablePlayer {
      */
     public boolean pause() {
         synchronized (playerLock) {
-            if (playerStatus == PLAYING) {
+            if (getPlayerStatus() == PLAYING) {
                 playerStatus = PAUSED;
             }
-            return playerStatus == PAUSED;
+            return getPlayerStatus() == PAUSED;
         }
     }
 
@@ -82,12 +102,22 @@ public class PausablePlayer {
      */
     public boolean resume() {
         synchronized (playerLock) {
-            if (playerStatus == PAUSED) {
+            if (getPlayerStatus() == PAUSED) {
                 playerStatus = PLAYING;
                 playerLock.notifyAll();
             }
-            return playerStatus == PLAYING;
+            return getPlayerStatus() == PLAYING;
         }
+    }
+    
+    public boolean seek(long bytes){
+        try {
+            this.stream.skip(bytes);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(PausablePlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 
     /**
@@ -101,17 +131,19 @@ public class PausablePlayer {
     }
 
     private void playInternal() {
-        while (playerStatus != FINISHED) {
+        while (getPlayerStatus() != FINISHED) {
             try {
                 if (!player.play(1)) {
                     break;
                 }
+                MusicPlayerGUI.jProgressBar1.setValue(player.getPosition()/5000);
+                MusicPlayerGUI.playtime.setText((player.getPosition()/60000)+":"+(player.getPosition()/1000)%60+" ~ Playing");
             } catch (final JavaLayerException e) {
                 break;
             }
             // check if paused or terminated
             synchronized (playerLock) {
-                while (playerStatus == PAUSED) {
+                while (getPlayerStatus() == PAUSED) {
                     try {
                         playerLock.wait();
                     } catch (final InterruptedException e) {
@@ -123,7 +155,6 @@ public class PausablePlayer {
         }
         close();
     }
-
     /**
      * Closes the player, regardless of current state.
      */
@@ -157,6 +188,13 @@ public class PausablePlayer {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * @return the playerStatus
+     */
+    public int getPlayerStatus() {
+        return playerStatus;
     }
 
 }

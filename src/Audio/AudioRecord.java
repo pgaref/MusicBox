@@ -8,11 +8,13 @@ package Audio;
  *
  * @author PG
  */
-public class AudioRecord {
+public class AudioRecord implements Comparable {
      protected String title;
      protected String artist;
      protected String album;
      private int rank;
+     private String path;
+     
 
      public AudioRecord() {
          title = "";
@@ -25,6 +27,13 @@ public class AudioRecord {
          this.artist = artist;
          this.album = album;
          this.rank = rank;
+     }
+     public AudioRecord(String title, String artist, String album, int rank, String path) {
+         this.title = title;
+         this.artist = artist;
+         this.album = album;
+         this.rank = rank;
+         this.path = path;
      }
 
      public String getTitle() {
@@ -67,7 +76,26 @@ public class AudioRecord {
     
     
     public String toString(){
-        return "["+this.title+", "+ this.artist+", "+ this.album+", "+this.rank + "]";
+        return "["+this.title+", "+ this.artist+", "+ this.album+", "+this.rank + " "  + this.path + "]";
         
+    }
+
+    /**
+     * @return the path
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * @param path the path to set
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return (this.rank - ((AudioRecord)o).getRank() );
     }
 }
