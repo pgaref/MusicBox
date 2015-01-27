@@ -2,6 +2,9 @@ MusicBox
 ========
 
 A music player with basic functionality and a Graphics interface
+You can import is as a Netbeans project or just use the source code!
+
+![alt tag](https://github.com/pgaref/MusicBox/blob/master/Screenshot.png)
 
 functions
 
